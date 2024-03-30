@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
-from bson import json_util
+from bson import json_util, ObjectId
 from dotenv import load_dotenv
 import os
 
@@ -62,6 +62,16 @@ def get_animal(id):
     animals_list = mongo.db.animals.find_one(({'nombre': id} or {'region': id}) and {'status':True})
     response = json_util.dumps(animals_list)
     return Response(response, mimetype='application/json')
+
+# UPDATE ANIMALS (STATUS)
+@app.route('/animals/<id>', methods = ['PUT'])
+def update_animal(id):
+    data = request.get_json()
+    response = mongo.db.animals.update_one({'_id': ObjectId(id)}, {'$set': data})
+    if response.modified_count >=1:
+        return{'message': 'Animal update'}
+    else:
+        not_found()
 
 # ERROR HANDLER
 @app.errorhandler(404)
