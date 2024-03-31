@@ -13,12 +13,12 @@ app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 
 # HOME ROUTE
-@app.route('/animals' , methods = ['POST'])
+@app.route('/home' , methods = ['POST'])
 def home():
     return "BIENVENIDO AL BACKEND DE SEASOS"
 
 # POST ANIMALS
-@app.route('/animals' , methods = ['POST'])
+@app.route('/post/animals' , methods = ['POST'])
 def create_animal():
     nombre = request.json['nombre']
     cientifico = request.json['cientifico']
@@ -55,21 +55,21 @@ def create_animal():
     return{'message': 'received'}
 
 # GET ANIMALS
-@app.route('/animals', methods = ['GET'])
+@app.route('/get/animals', methods = ['GET'])
 def get_animals():
     animals_list = mongo.db.animals.find({'status': True})
     response = json_util.dumps(animals_list)
     return Response(response, mimetype='application/json')
 
 # ANIMALS BY REGION OR NAME
-@app.route('/animals/<id>', methods = ['GET'])
+@app.route('/get/animals/<id>', methods = ['GET'])
 def get_animal(id):
     animals_list = mongo.db.animals.find_one(({'nombre': id} or {'region': id}) and {'status':True})
     response = json_util.dumps(animals_list)
     return Response(response, mimetype='application/json')
 
 # UPDATE ANIMALS (STATUS)
-@app.route('/animals/<id>', methods = ['PUT'])
+@app.route('/update/animals/<id>', methods = ['PUT'])
 def update_animal(id):
     data = request.get_json()
     response = mongo.db.animals.update_one({'_id': ObjectId(id)}, {'$set': data})
@@ -79,7 +79,7 @@ def update_animal(id):
         not_found()
 
 # DELETE ANIMAL
-@app.route('/animals/<id>', methods=['DELETE'])
+@app.route('/delete/animals/<id>', methods=['DELETE'])
 def delete_animal(id):
     deleted_animal = mongo.db.animals.find_one_and_delete({'_id': ObjectId(id)})
     
