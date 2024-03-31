@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, Response
 from flask_pymongo import PyMongo
 from bson import json_util, ObjectId
 from dotenv import load_dotenv
+from flask_cors import CORS
 import os
 
 load_dotenv()
@@ -11,6 +12,8 @@ app = Flask(__name__)
 app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 
 mongo = PyMongo(app)
+
+CORS(app)
 
 # HOME ROUTE
 @app.route('/' , methods = ['GET'])
