@@ -73,6 +73,16 @@ def update_animal(id):
     else:
         not_found()
 
+# DELETE ANIMAL
+@app.route('/animals/<id>', methods=['DELETE'])
+def delete_animal(id):
+    deleted_animal = mongo.db.animals.find_one_and_delete({'_id': ObjectId(id)})
+    
+    if deleted_animal:
+        return {'message': 'Animal deleted'}
+    else:
+        return not_found()
+    
 # ERROR HANDLER
 @app.errorhandler(404)
 def not_found(error = None):
