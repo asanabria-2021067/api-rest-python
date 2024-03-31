@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "df55cb40-5fe6-45bd-8a2f-a3c9786b2748",
+		"name": "SEASOS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33955429"
+	},
+	"item": [
+		{
+			"name": "GET ANIMALS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api-rest-python-six.vercel.app/get/animals",
+					"protocol": "https",
+					"host": [
+						"api-rest-python-six",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"get",
+						"animals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ANIMALS BY NAME",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api-rest-python-six.vercel.app/get/animals",
+					"protocol": "https",
+					"host": [
+						"api-rest-python-six",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"get",
+						"animals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST ANIMALS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"Caballito de Mar Blanco\",\r\n    \"cientifico\": \"Hippocampus whitei\",\r\n    \"region\": \"Australia\",\r\n    \"latitud\": -32.675145540454764,\r\n    \"longitud\": 152.16549118191276,\r\n    \"img\":\"https://t1.uc.ltmcdn.com/es/posts/1/2/2/como_es_el_caballito_de_mar_17221_600.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-rest-python-six.vercel.app/post/animals",
+					"protocol": "https",
+					"host": [
+						"api-rest-python-six",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"post",
+						"animals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE ANIMALS",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"Caballito de Mar Blanco\",\r\n    \"cientifico\": \"Hippocampus whitei\",\r\n    \"region\": \"Australia\",\r\n    \"latitud\": -32.675145540454764,\r\n    \"longitud\": 152.16549118191276,\r\n    \"img\":\"https://t1.uc.ltmcdn.com/es/posts/1/2/2/como_es_el_caballito_de_mar_17221_600.jpg\",\r\n    \"status\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-rest-python-six.vercel.app/update/animals/66099e40f7cba96ab014ff65",
+					"protocol": "https",
+					"host": [
+						"api-rest-python-six",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"update",
+						"animals",
+						"66099e40f7cba96ab014ff65"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
