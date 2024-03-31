@@ -12,6 +12,11 @@ app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 
 mongo = PyMongo(app)
 
+# HOME ROUTE
+@app.route('/animals' , methods = ['POST'])
+def home():
+    return "BIENVENIDO AL BACKEND DE SEASOS"
+
 # POST ANIMALS
 @app.route('/animals' , methods = ['POST'])
 def create_animal():
