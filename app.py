@@ -3,6 +3,7 @@ from flask_pymongo import PyMongo, ObjectId
 from dotenv import load_dotenv
 from flask_cors import CORS
 import os
+import re
 
 load_dotenv()
 
@@ -68,10 +69,11 @@ def get_animals():
 # ANIMALS BY REGION OR NAME
 @app.route('/get/animals/<id>', methods=['GET'])
 def get_animal(id):
-    animals_list = mongo.db.animals.find({'$or': [{'nombre': id}, {'region': id}], 'status': True})
+    regex = re.compile(f'{id}', re.IGNORECASE)
+    animals_list = mongo.db.animals.find({'$or': [{'nombre': {'$regex': regex}}, {'region': {'$regex': regex}}], 'status': True})
     animals = []
     for animal in animals_list:
-        animal['_id'] = str(animal['_id'])  # Convertir ObjectId a cadena
+        animal['_id'] = str(animal['_id'])
         animals.append(animal)
     if animals:
         return jsonify(animals)
