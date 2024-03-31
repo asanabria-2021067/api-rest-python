@@ -61,6 +61,8 @@ def create_animal():
 def get_animals():
     animals_list = mongo.db.animals.find({'status': True})
     animals = [animal for animal in animals_list]
+    for animal in animals:
+        animal['_id'] = str(animal['_id'])  # Convertir ObjectId a cadena
     return jsonify(animals)
 
 # ANIMALS BY REGION OR NAME
@@ -68,6 +70,8 @@ def get_animals():
 def get_animal(id):
     animals_list = mongo.db.animals.find({'$or': [{'nombre': id}, {'region': id}], 'status': True})
     animals = [animal for animal in animals_list]
+    for animal in animals:
+        animal['_id'] = str(animal['_id'])  # Convertir ObjectId a cadena
     return jsonify(animals)
 
 # UPDATE ANIMALS (STATUS)
