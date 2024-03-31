@@ -68,12 +68,16 @@ def get_animals():
 # ANIMALS BY REGION OR NAME
 @app.route('/get/animals/<id>', methods=['GET'])
 def get_animal(id):
-    animals_list = mongo.db.animals.find_one(({'nombre': id} or {'region': id}) and {'status':True})
-    animals = [animal for animal in animals_list]
-    for animal in animals:
+    animals_list = mongo.db.animals.find({'$or': [{'nombre': id}, {'region': id}], 'status': True})
+    animals = []
+    for animal in animals_list:
         animal['_id'] = str(animal['_id'])  # Convertir ObjectId a cadena
-    return jsonify(animals)
-
+        animals.append(animal)
+    if animals:
+        return jsonify(animals)
+    else:
+        return not_found()
+    
 # UPDATE ANIMALS (STATUS)
 @app.route('/update/animals/<id>', methods=['PUT'])
 def update_animal(id):
