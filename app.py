@@ -18,7 +18,8 @@ CORS(app)
 # HOME ROUTE
 @app.route('/' , methods = ['GET'])
 def home():
-    return "BIENVENIDO AL BACKEND DE SEASOS"
+    response = "BIENVENIDO AL BACKEND DE SEASOS"
+    return Response(response, mimetype='application/txt')
 
 # POST ANIMALS
 @app.route('/post/animals' , methods = ['POST'])
