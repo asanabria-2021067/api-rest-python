@@ -13,7 +13,7 @@ app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 
 # HOME ROUTE
-@app.route('/home' , methods = ['POST'])
+@app.route('/' , methods = ['POST'])
 def home():
     return "BIENVENIDO AL BACKEND DE SEASOS"
 

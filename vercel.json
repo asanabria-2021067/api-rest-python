@@ -5,10 +5,13 @@
             "use": "@vercel/python"
         }
     ],
-    "routes":[
+    "routes": [
         {
-            "src": "/(.*)",
-            "dest": "src/app.py"
+          "src": "/(.*)",
+          "dest": "/"
         }
-    ]
+      ],
+      "env": {
+        "MONGO_URI": "mongodb+srv://sanabria:sanabria123@seasos.klfvhka.mongodb.net/Prueba?retryWrites=true&w=majority"
+      }
 }
