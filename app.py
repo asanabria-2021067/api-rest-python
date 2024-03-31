@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, Response
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, ObjectId
 from dotenv import load_dotenv
 from flask_cors import CORS
 import os
@@ -78,7 +78,7 @@ def get_animal(id):
 @app.route('/update/animals/<id>', methods=['PUT'])
 def update_animal(id):
     data = request.json
-    response = mongo.db.animals.update_one({'_id': id}, {'$set': data})
+    response = mongo.db.animals.update_one({'_id': ObjectId(id)}, {'$set': data})
     if response.modified_count >= 1:
         return jsonify({'message': 'Animal updated'})
     else:
@@ -87,7 +87,7 @@ def update_animal(id):
 # DELETE ANIMAL
 @app.route('/delete/animals/<id>', methods=['DELETE'])
 def delete_animal(id):
-    deleted_animal = mongo.db.animals.find_one_and_delete({'_id': id})
+    deleted_animal = mongo.db.animals.find_one_and_delete({'_id': ObjectId(id)})
     if deleted_animal:
         return jsonify({'message': 'Animal deleted'})
     else:
