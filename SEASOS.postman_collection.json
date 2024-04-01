@@ -120,6 +120,100 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "POST USERS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"John\",\r\n    \"apellido\": \"Doe\",\r\n    \"correo\": \"john.doe@example.com\",\r\n    \"contrasena\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-rest-python-six.vercel.app/post/users",
+					"protocol": "https",
+					"host": [
+						"api-rest-python-six",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"post",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE USERS",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"John\",\r\n    \"apellido\": \"Doe\",\r\n    \"correo\": \"john.doe@example.com\",\r\n    \"contrasena\": \"newpassword123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-rest-python-six.vercel.app/update/users/66099e40f7cba96ab014ff65",
+					"protocol": "https",
+					"host": [
+						"api-rest-python-six",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"update",
+						"users",
+						"66099e40f7cba96ab014ff65"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE USERS",
+			"request": {
+				"method": "DELETE",
+				"url": {
+					"raw": "https://api-rest-python-six.vercel.app/delete/users/66099e40f7cba96ab014ff65",
+					"protocol": "https",
+					"host": [
+						"api-rest-python-six",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"delete",
+						"users",
+						"66099e40f7cba96ab014ff65"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
