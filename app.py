@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 import os
 import re
+import bcrypt
+
 
 load_dotenv()
 
@@ -99,6 +101,99 @@ def delete_animal(id):
     else:
         return not_found()
 
+
+
+# POST USERS
+@app.route('/post/users', methods=['POST'])
+def create_user():
+    data = request.json
+    nombre = data.get('nombre')
+    apellido = data.get('apellido')
+    correo = data.get('correo')
+    contrasena = data.get('contrasena')
+
+    if nombre and apellido and correo and contrasena:
+        # Hashear la contraseña
+        hashed_password = bcrypt.hashpw(contrasena.encode('utf-8'), bcrypt.gensalt())
+        
+        row = mongo.db.users.insert_one({
+            "nombre": nombre,
+            "apellido": apellido,
+            "correo": correo,
+            "contrasena": hashed_password.decode('utf-8')
+        })
+        response = {
+            'id': str(row.inserted_id),
+            'nombre': nombre,
+            'apellido': apellido,
+            'correo': correo,
+        }
+        return jsonify(response)
+    else:
+        return not_found()
+
+    
+# UPDATE USER
+@app.route('/update/users/<id>', methods=['PUT'])
+def update_user(id):
+    data = request.json
+    nombre = data.get('nombre')
+    apellido = data.get('apellido')
+    correo = data.get('correo')
+    contrasena = data.get('contrasena')
+
+    if nombre or apellido or correo or contrasena:
+        update_data = {}
+        if nombre:
+            update_data['nombre'] = nombre
+        if apellido:
+            update_data['apellido'] = apellido
+        if correo:
+            update_data['correo'] = correo
+        if contrasena:
+            hashed_password = bcrypt.hashpw(contrasena.encode('utf-8'), bcrypt.gensalt())
+            update_data['contrasena'] = hashed_password.decode('utf-8')
+        
+        response = mongo.db.users.update_one({'_id': ObjectId(id)}, {'$set': update_data})
+        if response.modified_count >= 1:
+            return jsonify({'message': 'Usuario actualizado'})
+        else:
+            return not_found("El usuario no fue encontrado")
+    else:
+        return jsonify({'message': 'Nada para actualizar'})
+
+# DELETE USER
+@app.route('/delete/users/<id>', methods=['DELETE'])
+def delete_user(id):
+    deleted_user = mongo.db.users.find_one_and_delete({'_id': ObjectId(id)})
+    if deleted_user:
+        return jsonify({'message': 'Usuario eliminado'})
+    else:
+        return not_found("El usuario no fue encontrado")
+
+
+
+# Autenticar usuario
+def authenticate_user(correo, contrasena):
+    user = mongo.db.users.find_one({'correo': correo})
+    if user:
+        hashed_password = user.get('contrasena').encode('utf-8')
+        if bcrypt.checkpw(contrasena.encode('utf-8'), hashed_password):
+            return True
+    return False
+
+    
+
+# GET USERS
+@app.route('/get/users', methods=['GET'])
+def get_users():
+    users_list = mongo.db.users.find()
+    users = [user for user in users_list]
+    for user in users:
+        user['_id'] = str(user['_id'])
+    return jsonify(users)
+    
+
 # ERROR HANDLER
 @app.errorhandler(404)
 def not_found(error=None):
@@ -111,3 +206,4 @@ def not_found(error=None):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
