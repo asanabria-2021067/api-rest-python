@@ -111,6 +111,7 @@ def create_user():
     apellido = data.get('apellido')
     correo = data.get('correo')
     contrasena = data.get('contrasena')
+    logged = data.get('logged', False)
 
     if nombre and apellido and correo and contrasena:
         # Hashear la contraseña
@@ -120,13 +121,15 @@ def create_user():
             "nombre": nombre,
             "apellido": apellido,
             "correo": correo,
-            "contrasena": hashed_password.decode('utf-8')
+            "contrasena": hashed_password.decode('utf-8'),
+            "logged": logged
         })
         response = {
             'id': str(row.inserted_id),
             'nombre': nombre,
             'apellido': apellido,
             'correo': correo,
+            "logged": logged
         }
         return jsonify(response)
     else:
@@ -141,8 +144,9 @@ def update_user(id):
     apellido = data.get('apellido')
     correo = data.get('correo')
     contrasena = data.get('contrasena')
+    logged = data.get('logged')
 
-    if nombre or apellido or correo or contrasena:
+    if nombre or apellido or correo or contrasena or logged is not None:
         update_data = {}
         if nombre:
             update_data['nombre'] = nombre
@@ -153,6 +157,8 @@ def update_user(id):
         if contrasena:
             hashed_password = bcrypt.hashpw(contrasena.encode('utf-8'), bcrypt.gensalt())
             update_data['contrasena'] = hashed_password.decode('utf-8')
+        if logged is not None:
+            update_data['logged'] = logged
         
         response = mongo.db.users.update_one({'_id': ObjectId(id)}, {'$set': update_data})
         if response.modified_count >= 1:
@@ -161,6 +167,7 @@ def update_user(id):
             return not_found("El usuario no fue encontrado")
     else:
         return jsonify({'message': 'Nada para actualizar'})
+
 
 # DELETE USER
 @app.route('/delete/users/<id>', methods=['DELETE'])
@@ -192,6 +199,48 @@ def get_users():
     for user in users:
         user['_id'] = str(user['_id'])
     return jsonify(users)
+
+
+logged_in_user = None
+
+# LOGIN ROUTE
+@app.route('/login', methods=['POST'])
+def login():
+    global logged_in_user
+
+    data = request.json
+    correo = data.get('correo')
+    contrasena = data.get('contrasena')
+
+    if correo and contrasena:
+        user = mongo.db.users.find_one({'correo': correo})
+        if user:
+            hashed_password = user.get('contrasena').encode('utf-8')
+            if bcrypt.checkpw(contrasena.encode('utf-8'), hashed_password):
+                mongo.db.users.update_one({'_id': user['_id']}, {'$set': {'logged': True}})
+                logged_in_user = correo
+                return jsonify({'message': 'Inicio de sesión exitoso'})
+            else:
+                return jsonify({'message': 'Contraseña inválida'}), 401
+        else:
+            return jsonify({'message': 'Usuario no encontrado'}), 404
+    else:
+        return jsonify({'message': 'Email o contraseña faltante'}), 400
+
+# LOGOUT ROUTE
+@app.route('/logout', methods=['POST'])
+def logout():
+    global logged_in_user
+
+    if logged_in_user:
+        user = mongo.db.users.find_one({'correo': logged_in_user})
+        if user:
+            mongo.db.users.update_one({'_id': user['_id']}, {'$set': {'logged': False}})
+        logged_in_user = None
+        return jsonify({'message': 'Cierre de sesión exitoso'})
+    else:
+        return jsonify({'message': 'No hay un usuario loggeado'}), 400
+
     
 
 # ERROR HANDLER
