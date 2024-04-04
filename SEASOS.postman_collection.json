@@ -214,6 +214,64 @@
 				}
 			},
 			"response": []
-		}
+		},
+        {
+            "name": "LOGIN",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"correo\": \"usuario@example.com\", \"contrasena\": \"contrasena123\"}"
+                },
+                "url": {
+                    "raw": "https://api-rest-python-six.vercel.app/login",
+                    "protocol": "https",
+                    "host": [
+                        "api-rest-python-six",
+                        "vercel",
+                        "app"
+                    ],
+                    "path": [
+                        "login"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "LOGOUT",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"correo\": null}"
+                },
+                "url": {
+                    "raw": "https://api-rest-python-six.vercel.app/logout",
+                    "protocol": "https",
+                    "host": [
+                        "api-rest-python-six",
+                        "vercel",
+                        "app"
+                    ],
+                    "path": [
+                        "logout"
+                    ]
+                }
+            },
+            "response": []
+        }
 	]
 }
