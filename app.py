@@ -81,6 +81,14 @@ def get_animal(id):
         return jsonify(animals)
     else:
         return not_found()
+
+@app.route('/get/all_animals', methods=['GET'])
+def get_all_animals():
+    animals_list = mongo.db.animals.find()
+    animals = [animal for animal in animals_list]
+    for animal in animals:
+        animal['_id'] = str(animal['_id'])
+    return jsonify(animals)
     
 # UPDATE ANIMALS (STATUS)
 @app.route('/update/animals/<id>', methods=['PUT'])
