@@ -268,6 +268,20 @@ def logout():
         return jsonify({'message': 'Cierre de sesión exitoso'})
     else:
         return jsonify({'message': 'No hay un usuario loggeado'}), 400
+    
+
+# Cantidad de animales
+@app.route('/count/animals', methods=['GET'])
+def count_animals():
+    count = mongo.db.animals.count_documents({})
+    return jsonify({'Cantidad de animales': count})
+
+# Cantidad de usuarios
+@app.route('/count/users', methods=['GET'])
+def count_users():
+    count = mongo.db.users.count_documents({})
+    return jsonify({'Cantidad de usuarios': count})
+
 
     
 
