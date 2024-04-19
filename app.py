@@ -5,7 +5,7 @@ from flask_cors import CORS
 import os
 import re
 import bcrypt
-
+import openai
 
 load_dotenv()
 
@@ -16,6 +16,26 @@ app.config['MONGO_URI'] = os.getenv('MONGO_URI')
 mongo = PyMongo(app)
 
 CORS(app)
+
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+@app.route('/get/animal-description', methods=['POST'])
+def get_animal_description():
+    data = request.json
+    animal_name = data.get('animal_name')
+
+    if animal_name:
+        prompt = f"Dame la descripción del {animal_name} en exactamente 50 palabras: "
+        response = openai.Completion.create(
+            engine="gpt-3.5-turbo-instruct",
+            prompt=prompt,
+            max_tokens=350,
+            temperature=0.7
+        )
+        description = response.choices[0].text.strip()
+        return jsonify({'description': description})
+    else:
+        return jsonify({'message': 'Nombre de animal no proporcionado'}), 400
 
 # HOME ROUTE
 @app.route('/', methods=['GET'])
@@ -248,6 +268,20 @@ def logout():
         return jsonify({'message': 'Cierre de sesión exitoso'})
     else:
         return jsonify({'message': 'No hay un usuario loggeado'}), 400
+    
+
+# Cantidad de animales
+@app.route('/count/animals', methods=['GET'])
+def count_animals():
+    count = mongo.db.animals.count_documents({})
+    return jsonify({'Cantidad de animales': count})
+
+# Cantidad de usuarios
+@app.route('/count/users', methods=['GET'])
+def count_users():
+    count = mongo.db.users.count_documents({})
+    return jsonify({'Cantidad de usuarios': count})
+
 
     
 
