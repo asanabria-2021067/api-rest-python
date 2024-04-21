@@ -27,8 +27,10 @@ Asegúrese de tener Python y pip instalados en su sistema. Luego, cree y active 
    ```
 3. **Configurar MongoDB**
    Asegúrese de tener una instancia de MongoDB en ejecución. Puede configurar las credenciales y la URL de conexión en el archivo de configuración (.env) del proyecto. 
-   # En este caso ya se tiene una instancia en el .env que es a nuestra base de animales (como solo se usara para desarrollo y calificación se espera el buen uso de esta misma)
-4. **Ejecutar el backend**
+   ```bash
+   En este caso ya se tiene una instancia en el .env que es a nuestra base de animales (como solo se usara para desarrollo y calificación se espera el buen uso de esta misma)
+   ```
+5. **Ejecutar el backend**
    Para ejecutar el backend se deberá levantar el entorno virtual (por lo tanto es necesario hacer la lista de pasos en orden)
     ```bash
     python app.py
