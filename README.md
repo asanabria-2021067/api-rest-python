@@ -19,12 +19,12 @@ Para configurar y ejecutar el backend de SEASOS, siga estos pasos:
    ```
 2. **Instalar Dependencias**
 Asegúrese de tener Python y pip instalados en su sistema. Luego, cree y active un entorno virtual:
- ```bash
-  python -m venv venv
-  \venv\Scripts\bin\activate   # Para Windows
-  source venv/bin/activate      # Para MacOS/Linux
-  pip install -r requirements.txt
- ```
+   ```bash
+   python -m venv venv
+   \venv\Scripts\bin\activate   # Para Windows
+   source venv/bin/activate      # Para MacOS/Linux
+   pip install -r requirements.txt
+   ```
 3. **Configurar MongoDB**
    Asegúrese de tener una instancia de MongoDB en ejecución. Puede configurar las credenciales y la URL de conexión en el archivo de configuración (.env) del proyecto. 
    # En este caso ya se tiene una instancia en el .env que es a nuestra base de animales (como solo se usara para desarrollo y calificación se espera el buen uso de esta misma)
