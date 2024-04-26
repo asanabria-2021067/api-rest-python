@@ -120,6 +120,7 @@ def create_user():
     correo = data.get('correo')
     contrasena = data.get('contrasena')
     logged = data.get('logged', False)
+    status = False
 
     if nombre and apellido and correo and contrasena:
         # Hashear la contraseña
@@ -130,14 +131,16 @@ def create_user():
             "apellido": apellido,
             "correo": correo,
             "contrasena": hashed_password.decode('utf-8'),
-            "logged": logged
+            "logged": logged,
+            "status": status
         })
         response = {
             'id': str(row.inserted_id),
             'nombre': nombre,
             'apellido': apellido,
             'correo': correo,
-            "logged": logged
+            "logged": logged,
+            "status": status
         }
         return jsonify(response)
     else:
@@ -153,20 +156,23 @@ def update_user(id):
     correo = data.get('correo')
     contrasena = data.get('contrasena')
     logged = data.get('logged')
+    status = data.get('status')
 
-    if nombre or apellido or correo or contrasena or logged is not None:
+    if nombre is not None or apellido is not None or correo is not None or contrasena is not None or logged is not None or status is not None:
         update_data = {}
-        if nombre:
+        if nombre is not None:
             update_data['nombre'] = nombre
-        if apellido:
+        if apellido is not None:
             update_data['apellido'] = apellido
-        if correo:
+        if correo is not None:
             update_data['correo'] = correo
-        if contrasena:
+        if contrasena is not None:
             hashed_password = bcrypt.hashpw(contrasena.encode('utf-8'), bcrypt.gensalt())
             update_data['contrasena'] = hashed_password.decode('utf-8')
         if logged is not None:
             update_data['logged'] = logged
+        if status is not None:
+            update_data['status'] = status
         
         response = mongo.db.users.update_one({'_id': ObjectId(id)}, {'$set': update_data})
         if response.modified_count >= 1:
@@ -175,6 +181,7 @@ def update_user(id):
             return not_found("El usuario no fue encontrado")
     else:
         return jsonify({'message': 'Nada para actualizar'})
+
 
 
 # DELETE USER
@@ -202,7 +209,7 @@ def authenticate_user(correo, contrasena):
 # GET USERS
 @app.route('/get/users', methods=['GET'])
 def get_users():
-    users_list = mongo.db.users.find()
+    users_list = mongo.db.users.find({"status": True})
     users = [user for user in users_list]
     for user in users:
         user['_id'] = str(user['_id'])
@@ -223,13 +230,16 @@ def login():
     if correo and contrasena:
         user = mongo.db.users.find_one({'correo': correo})
         if user:
-            hashed_password = user.get('contrasena').encode('utf-8')
-            if bcrypt.checkpw(contrasena.encode('utf-8'), hashed_password):
-                mongo.db.users.update_one({'_id': user['_id']}, {'$set': {'logged': True}})
-                logged_in_user = correo
-                return jsonify({'message': 'Inicio de sesión exitoso'})
+            if user.get('status'):
+                hashed_password = user.get('contrasena').encode('utf-8')
+                if bcrypt.checkpw(contrasena.encode('utf-8'), hashed_password):
+                    mongo.db.users.update_one({'_id': user['_id']}, {'$set': {'logged': True}})
+                    logged_in_user = correo
+                    return jsonify({'message': 'Inicio de sesión exitoso'})
+                else:
+                    return jsonify({'message': 'Contraseña inválida'}), 401
             else:
-                return jsonify({'message': 'Contraseña inválida'}), 401
+                return jsonify({'message': 'El usuario no tiene permiso para iniciar sesión'}), 403
         else:
             return jsonify({'message': 'Usuario no encontrado'}), 404
     else:
