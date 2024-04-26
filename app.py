@@ -209,7 +209,7 @@ def authenticate_user(correo, contrasena):
 # GET USERS
 @app.route('/get/users', methods=['GET'])
 def get_users():
-    users_list = mongo.db.users.find({"status": True})
+    users_list = mongo.db.users.find()
     users = [user for user in users_list]
     for user in users:
         user['_id'] = str(user['_id'])
